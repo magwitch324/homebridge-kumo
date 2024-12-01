@@ -58,6 +58,12 @@ export class KumoPlatformAccessory {
     this.Fan.setCharacteristic(this.platform.Characteristic.Name, 'Fan');
     this.PowerSwitch.setCharacteristic(this.platform.Characteristic.Name, 'Power');
 
+    // set temperature ranges
+    this.Thermostat.getCharacteristic(this.platform.Characteristic.TargetTemperature).setProps({
+      minValue: 16,
+      maxValue: 30
+    });
+
     // create handlers for characteristics
     this.Thermostat.getCharacteristic(this.platform.Characteristic.CurrentHeaterCoolerState)
       .on('get', this.handleCurrentHeaterCoolerStateGet.bind(this));
