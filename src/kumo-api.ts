@@ -78,13 +78,14 @@ const KumoTokenExpirationWindow = KUMO_API_TOKEN_REFRESH_INTERVAL * 60 * 60 * 10
 export class KumoApi {
   //Devices!: Array<KumoDevice>;
   devices;
+  isCelsiusUnits!: boolean;
 
   private username: string;
   private password: string;
   private securityToken!: string;
   private securityTokenTimestamp!: number;
   private lastAuthenticateCall!: number;
-
+  
   private log: Logger;
 
   private headers = {
@@ -165,6 +166,9 @@ export class KumoApi {
     this.securityTokenTimestamp = now;
 
     this.log.debug('Token: %s', this.securityToken);
+
+    // Set the temperature units.
+    this.isCelsiusUnits = data[1].celsius;
 
     // Add the token to our headers that we will use for subsequent API calls.
     //this.headers.SecurityToken = this.securityToken;
