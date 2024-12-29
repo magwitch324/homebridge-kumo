@@ -58,11 +58,29 @@ export class KumoPlatformAccessory {
     this.Fan.setCharacteristic(this.platform.Characteristic.Name, 'Fan');
     this.PowerSwitch.setCharacteristic(this.platform.Characteristic.Name, 'Power');
 
+    const tempStep = 0.1;
+    let minSetTemp: number, maxSetTemp: number, minGetTemp: number, maxGetTemp: number;
+    if (this.platform.kumo.isCelsiusUnits) {
+      minSetTemp = 9;
+      maxSetTemp = 32;
+      minGetTemp = -20;
+      maxGetTemp = 60;
+    } else {
+      minSetTemp = this.fahrenheitToCelsius(50);
+      maxSetTemp = this.fahrenheitToCelsius(90);
+      minGetTemp = this.fahrenheitToCelsius(0);
+      maxGetTemp = this.fahrenheitToCelsius(160);
+    }
+
     // set temperature ranges
-    this.Thermostat.getCharacteristic(this.platform.Characteristic.TargetTemperature).setProps({
-      minValue: 16,
-      maxValue: 30
-    });
+    this.Thermostat.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
+      .setProps({ minStep: tempStep, minValue: minGetTemp, maxValue: maxGetTemp });
+    this.Thermostat.getCharacteristic(this.platform.Characteristic.TargetTemperature)
+      .setProps({ minStep: tempStep, minValue: minSetTemp, maxValue: maxSetTemp });
+    this.Thermostat.getCharacteristic(this.platform.Characteristic.CoolingThresholdTemperature)
+      .setProps({ minStep: tempStep, minValue: minSetTemp, maxValue: maxSetTemp });
+    this.Thermostat.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
+      .setProps({ minStep: tempStep, minValue: minSetTemp, maxValue: maxSetTemp });
 
     // create handlers for characteristics
     this.Thermostat.getCharacteristic(this.platform.Characteristic.CurrentHeaterCoolerState)
@@ -722,4 +740,8 @@ export class KumoPlatformAccessory {
   private roundHalf(num: number) {
     return Math.round(num*2)/2;
   }
+
+  private fahrenheitToCelsius = function(temperature: number) {
+    return (temperature - 32) / 1.8;
+  };
 }

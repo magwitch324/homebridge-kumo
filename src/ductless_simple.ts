@@ -77,10 +77,7 @@ export class KumoPlatformAccessory_ductless_simple {
       this.HumidityBattery.setCharacteristic(this.platform.Characteristic.ChargingState, this.platform.Characteristic.ChargingState.NOT_CHARGEABLE);
     }
 
-    this.platform.log.info('Kumo is celsius:', this.platform.kumo.isCelsiusUnits); 
-    
     const tempStep = 0.1;
-    
     let minSetTemp: number, maxSetTemp: number, minGetTemp: number, maxGetTemp: number;
     if (this.platform.kumo.isCelsiusUnits) {
       minSetTemp = 9;

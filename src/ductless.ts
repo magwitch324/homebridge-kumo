@@ -105,6 +105,30 @@ export class KumoPlatformAccessory_ductless {
       this.HumidityBattery.setCharacteristic(this.platform.Characteristic.ChargingState, this.platform.Characteristic.ChargingState.NOT_CHARGEABLE);
     }
 
+    const tempStep = 0.1;  
+    let minSetTemp: number, maxSetTemp: number, minGetTemp: number, maxGetTemp: number;
+    if (this.platform.kumo.isCelsiusUnits) {
+      minSetTemp = 9;
+      maxSetTemp = 32;
+      minGetTemp = -20;
+      maxGetTemp = 60;
+    } else {
+      minSetTemp = this.fahrenheitToCelsius(50);
+      maxSetTemp = this.fahrenheitToCelsius(90);
+      minGetTemp = this.fahrenheitToCelsius(0);
+      maxGetTemp = this.fahrenheitToCelsius(160);
+    }
+
+    // set temperature ranges
+    this.HeaterCooler.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
+      .setProps({ minStep: tempStep, minValue: minGetTemp, maxValue: maxGetTemp });
+    this.HeaterCooler.getCharacteristic(this.platform.Characteristic.TargetTemperature)
+      .setProps({ minStep: tempStep, minValue: minSetTemp, maxValue: maxSetTemp });
+    this.HeaterCooler.getCharacteristic(this.platform.Characteristic.CoolingThresholdTemperature)
+      .setProps({ minStep: tempStep, minValue: minSetTemp, maxValue: maxSetTemp });
+    this.HeaterCooler.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
+      .setProps({ minStep: tempStep, minValue: minSetTemp, maxValue: maxSetTemp });
+
     // create handlers for characteristics
     this.HeaterCooler.getCharacteristic(this.platform.Characteristic.Active)
       .on('get', this.handleActiveGet.bind(this))
@@ -843,6 +867,10 @@ export class KumoPlatformAccessory_ductless {
   private roundHalf(num: number) {
     return Math.round(num*2)/2;
   }
+
+  private fahrenheitToCelsius = function(temperature: number) {
+    return (temperature - 32) / 1.8;
+  };
 }
 
 
