@@ -404,7 +404,7 @@ export class KumoPlatformAccessory_ductless_simple {
 
       if (ourSensor.battery) {
         if (ourSensor.battery < 10) {
-          this.platform.log.warn('!!!The sensor attached to device %s has a low battery!!!', this.accessory.context.serial);
+          this.platform.log.warn('!!!The sensor attached to device %s has a low battery!!!', this.accessory.context.serial)
 
           this.Humidity.updateCharacteristic(this.platform.Characteristic.StatusLowBattery, this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW);
           this.HumidityBattery.updateCharacteristic(this.platform.Characteristic.StatusLowBattery, this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW);

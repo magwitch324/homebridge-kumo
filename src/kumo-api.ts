@@ -85,7 +85,7 @@ export class KumoApi {
   private securityToken!: string;
   private securityTokenTimestamp!: number;
   private lastAuthenticateCall!: number;
-  
+
   private log: Logger;
 
   private headers = {
